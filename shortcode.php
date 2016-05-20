@@ -27,8 +27,11 @@ extract(
 );
 
 ?>
+<!-- Import JavaScripts -->
+<script type='text/javascript' src='<?=plugins_url( '/js/main.js', __FILE__ )?>'></script>
+
+<!-- Now let's write some HTML -->
 <h2>Define the shortcode output.</h2>
-<?php
-echo "Email (option) = ".$plugin_options['option_email']."<br/>";
-echo "Color (attribute) = ".$color."<br/>";
-?>
+<p>Email (option) = <?=$plugin_options['option_email']?></p>
+<p>Color (attribute) = <?=$color?></p>
+<p>To prove JavaScript is working, this timestamp will change periodically as the page reloads: <?=date("h:i:sa")?></p>
