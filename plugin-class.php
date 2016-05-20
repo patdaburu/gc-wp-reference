@@ -104,7 +104,8 @@ class GC_Reference {
 		// Register the plugin's settings.
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 
-		/* // Registration of the hook functions has been moved to the main plugin file.
+		/* Registration of the hook functions has been removed to the main plugin file. */
+		/* 
 		// Set up the actions to perform on activation.
 		register_activation_hook( __FILE__, array( __CLASS__, 'on_activate' ) );
 		// Set up the actions to perform on deactivation.

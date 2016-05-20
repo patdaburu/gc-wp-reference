@@ -15,7 +15,10 @@
 // Include the class that defines the plugin's core behavior.
 include_once "plugin-class.php";
 
-// Note:  It has been possible (intermittently) to register hooks in the plugin class.
+/*
+Note:  It has been possible (intermittently) to register hooks in the plugin class.  However, registering in the main
+file has proven to be more reliable.
+*/
 
 /**
  * Performs plugin activation steps.
@@ -25,6 +28,7 @@ include_once "plugin-class.php";
  * @ignore
  * @since 1.0.0.0
  * @see register_activation_hook()
+ * @see GC_Reference::on_activate()
  */
 function on_activate(){
 	GC_Reference::on_activate();
@@ -40,6 +44,7 @@ register_activation_hook( __FILE__, 'on_activate');
  * @ignore
  * @since 1.0.0.0
  * @see register_deactivation_hook()
+ * @see GC_Reference::on_deactivate()
  */
 function on_deactivate(){
 	GC_Reference::on_deactivate();
@@ -55,6 +60,7 @@ register_deactivation_hook( __FILE__, 'on_deactivate');
  * @ignore
  * @since 1.0.0.0
  * @see register_uninstall_hook()
+ * @see GC_Reference::on_uninstall()
  */
 function on_uninstall(){
     GC_Reference::on_uninstall();
@@ -63,5 +69,5 @@ function on_uninstall(){
 register_uninstall_hook( __FILE__, 'on_uninstall');
 
 // Start up the plugin.
-Gc_Reference::startup();
+GC_Reference::startup();
 ?>
