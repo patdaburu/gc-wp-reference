@@ -10,6 +10,11 @@
 <?php
 
 /**
+ * The plugins registers the widget class.
+ */
+include_once 'widget-class.php';
+
+/**
  * Entry point for the GC_Reference plugin.
  *
  * Description: In this context, the class serves as a namespace for a collection of static functions that define
@@ -29,15 +34,17 @@ class GC_Reference {
 
 	/**
 	 * The localization text domain.
+	 *
 	 * @link https://codex.wordpress.org/I18n_for_WordPress_Developers
 	 * @since 1.0.0.0
 	 * @access private
 	 * @var string $text_domain the I18n text domain for the plugin
 	 */
-	private static $text_domain = 'gc-reference';
+	public static $text_domain = 'gc-reference';
 
 	/**
 	 * String used as the plugin's default shortcode.
+	 *
 	 * @since 1.0.0.0
 	 * @access private
 	 * @var string $shortcode the string to use as the default shortcode
@@ -47,6 +54,7 @@ class GC_Reference {
 
 	/**
 	 * The name of the plugin's page.
+	 *
 	 * @since 1.0.0.0
 	 * @access private
 	 * @var string $page_title the name of the plugin's page
@@ -55,6 +63,7 @@ class GC_Reference {
 
 	/**
 	 * String used as the default name of the page added by the plugin.
+	 *
 	 * @since 1.0.0.0
 	 * @access private
 	 * @var string $page_name the string to use as the default page name
@@ -63,6 +72,7 @@ class GC_Reference {
 
 	/**
 	 * String used as the default slug (or slug prefix).
+	 *
 	 * @since 1.0.0.0
 	 * @access private
 	 * @var string $slug the string to use as the default slug (or slug prefix)
@@ -73,6 +83,7 @@ class GC_Reference {
 
 	/**
 	 * Identifier for the plugin's option group.
+	 *
 	 * @since 1.0.0.0
 	 * @access public
 	 * @var string $option_group the string to use as the default slug (or slug prefix)
@@ -104,6 +115,13 @@ class GC_Reference {
 		// Register the plugin's settings.
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 
+		// Add the shortcode for a plugin.  (If you need more shortcodes, create additional functions and calls to
+		// add_shortcode).
+		add_shortcode( GC_Reference::$shortcode, array( __CLASS__, 'shortcode' ) );
+
+		// Register the plugin's widget(s).
+		add_action('widgets_init', array(__CLASS__, 'on_widgets_init'));
+
 		/* Registration of the hook functions has been removed to the main plugin file. */
 		/* 
 		// Set up the actions to perform on activation.
@@ -114,23 +132,11 @@ class GC_Reference {
 		register_uninstall_hook( __FILE__, array( __CLASS__, 'on_uninstall' ) );
 		*/
 
-		//add_action('the_title', array( __CLASS__, 'on_the_title'));
-
 		/**
 		 * Below are common functions that may, or may not be interesting for the purposes of this plugin.
 		 */
 		//add_action('add_meta_boxes', array( __CLASS__, 'on_add_meta_boxes' ));
-
-		// Add the shortcode for a plugin.  (If you need more shortcodes, create additional functions and calls to
-		// add_shortcode).
-		add_shortcode( GC_Reference::$shortcode, array( __CLASS__, 'shortcode' ) );
 	}
-
-	/*	static function on_the_title($title){
-	$title = "Gamma-Ra sez:".$title;
-	return $title;
-	}*/
-
 
 	/**
 	 * Performs WordPress plugin initialization steps.
@@ -138,7 +144,7 @@ class GC_Reference {
 	 * This is the callback for the WordPress 'init' event.
 	 *
 	 * @ignore
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @see add_action()
 	 *
 	 */
@@ -157,7 +163,7 @@ class GC_Reference {
 	 * This is the callback for the WordPress 'admin_menu' event.  This is where we set up the admin menus.
 	 *
 	 * @ignore
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @see add_action()
 	 *
 	 */
@@ -203,11 +209,14 @@ class GC_Reference {
 	 * This is the callback for the WordPress 'admin_menu' event.  This is where we set up the admin menus.
 	 *
 	 * @ignore
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @see add_action()
+	 * @see GC_Reference::sanitize_options()
 	 *
 	 */
 	static function register_settings() {
+		// Register the plugin's settings with WordPress.  Note that the third argument is the callback WordPress will
+		// use to sanitize incoming values.
 		register_setting(
 			GC_Reference::$option_group,
 			GC_Reference::$options_name,
@@ -220,7 +229,7 @@ class GC_Reference {
 	 * This is the callback for the WordPress activation hook.
 	 *
 	 * @ignore
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @see register_activation_hook()
 	 */
 	static function on_activate() {
@@ -263,7 +272,7 @@ class GC_Reference {
 	 * This is the callback for the WordPress deactivation hook.
 	 *
 	 * @ignore
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @see register_deactivation_hook()
 	 */
 	static function on_deactivate() {
@@ -287,7 +296,7 @@ class GC_Reference {
 	 * This is the callback for the WordPress uninstall hook.
 	 *
 	 * @ignore
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @see register_uninstall_hook()
 	 */
 	static function on_uninstall() {
@@ -299,6 +308,15 @@ class GC_Reference {
 			// ...delete it (bypassing the trash).
 			wp_delete_post( $page->ID, true );
 		}
+	}
+
+	/**
+	 *
+	 * @see register_widget
+	 * @link https://developer.wordpress.org/reference/functions/register_widget/
+	 */
+	static function on_widgets_init() {
+		register_widget('GC_ReferenceWidget');
 	}
 
 	/**
@@ -324,24 +342,6 @@ class GC_Reference {
 		include 'support.php';
 	}
 
-
-
-	/*	static function on_add_meta_boxes(){
-	add_meta_box(
-	'gc-battra-meta', // The HTML ID for the meta box.
-	'Battra Information', // The title displayed in the header of the meta box
-	array( __CLASS__, 'settings_page' ), // The custom function to display meta box information
-	'post', // The page you want your meta box to display ('post', 'page', or custom post type name)
-	'side', // The part of the page where the meta box should be displayed ('normal', 'advanced', or 'side')
-	'default'); // The priority within the context where the meta box should display ('high', 'core',
-	// 'default', or 'low').
-	// You can also add an additional parameter to provide callback arguments.
-	}*/
-
-	/*	static function meta_box(){
-	include 'meta-box.php';
-	}*/
-
 	/**
 	 * Returns HTML for the plugin's shortcode.
 	 *
@@ -366,7 +366,10 @@ class GC_Reference {
 	/**
 	 * Sanitizes option values.
 	 *
-	 * @param $input
+	 * This callback is passed to WordPress when the plugin registers its settings.
+	 *
+	 * @param $input An array of form input values.
+	 * @see GC_Reference::register_settings()
 	 *
 	 * @return mixed
 	 */
@@ -383,7 +386,7 @@ class GC_Reference {
 	 * This is a helper function you can use to retrieve a page by name.
 	 *
 	 * @ignore
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @see get_pages()
 	 *
 	 * @param type $page_name The name of the page to find.
