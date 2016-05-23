@@ -19,7 +19,7 @@ class Options {
 	 * @var string $option_group the string to use as the default slug (or slug prefix)
 	 * @link https://developer.wordpress.org/reference/functions/register_setting/
 	 */
-	public static $options_group = null;
+	public static $options_group = null; // See below for static initialization of this static variable.
 
 	/**
 	 * Name of the plugin's options array.
@@ -31,7 +31,7 @@ class Options {
 	 * @var string $options_name name of the plugin's options array.
 	 * @link https://developer.wordpress.org/reference/functions/register_setting/
 	 */
-	public static $options_name = null;
+	public static $options_name = null; // See below for static initialization of this static variable.
 
 	/**
 	 * Registers the plugin's settings with WordPress.

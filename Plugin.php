@@ -61,54 +61,16 @@ class Plugin {
 	public static $admin_menu_name = 'GC Reference';
 
 	/**
-	 * The localization text domain.
-	 *
-	 * @link https://codex.wordpress.org/I18n_for_WordPress_Developers
-	 * @since 1.0.0.0
-	 * @access private
-	 * @var string $text_domain the I18n text domain for the plugin
-	 */
-	public static $text_domain = 'gc-reference';
-
-	/**
-	 * String used as the plugin's default shortcode.
-	 *
-	 * @since 1.0.0.0
-	 * @access private
-	 * @var string $shortcode the string to use as the default shortcode
-	 * @link https://codex.wordpress.org/Shortcode_API
-	 */
-	private static $shortcode = 'gc-reference';
-
-	/**
 	 * The name of the plugin's page.
 	 *
 	 * @since 1.0.0.0
 	 * @access private
 	 * @var string $page_title the name of the plugin's page
 	 */
-	private static $page_title = 'GC Reference';
+	private static $page_title = 'GeoComm WordPress Reference Plugin';
 
-	/**
-	 * String used as the default name of the page added by the plugin.
-	 *
-	 * @since 1.0.0.0
-	 * @access private
-	 * @var string $page_name the string to use as the default page name
-	 */
-	private static $page_name = 'gc-reference';
 
-	/**
-	 * String used as the default slug (or slug prefix).
-	 *
-	 * @since 1.0.0
-	 * @access private
-	 * @var string $slug the string to use as the default slug (or slug prefix)
-	 * @link http://codex.wordpress.org/Glossary#Slug
-	 * @see Plugin::shortcode
-	 */
-	private static $slug = 'gc-reference';
-	
+
 	/**
 	 * Returns the plugin basename.
 	 *
@@ -135,9 +97,9 @@ class Plugin {
 		// Register the plugin's settings.
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 
-		// Add the shortcode for a plugin.  (If you need more shortcodes, create additional functions and calls to
-		// add_shortcode).
-		add_shortcode( Plugin::$shortcode, array( __CLASS__, 'shortcode' ) );
+		// Add the shortcode for a plugin.  The shortcode for this plugin will be the 'base name' with dashes used as
+		// word boundaries.  (If you need more shortcodes, create additional functions and calls to add_shortcode).
+		add_shortcode( Plugin::getBasename('-'), array( __CLASS__, 'shortcode' ) );
 
 		// Register the plugin's widget(s).
 		add_action('widgets_init', array(__CLASS__, 'on_widgets_init'));
@@ -173,7 +135,8 @@ class Plugin {
 		 * Load the internationalization files.
 		 */
 		load_plugin_textdomain(
-			Plugin::$text_domain,
+			// The text domain is the plugin's "base name" with dashes substituted in for word boundaries.
+			Plugin::getBasename('-'),
 			false, plugin_basename( dirname( __FILE__ ) . '/localization' ) );
 	}
 
@@ -188,6 +151,8 @@ class Plugin {
 	 *
 	 */
 	static function on_admin_menu() {
+		// Establish the slug for the menu pages (based on the plugin's base name).
+		$slug = Plugin::getBasename('-');
 		/**
 		 * Note:  The terms 'settings' and 'options' are used somewhat interchangeably.  Labels will typically use
 		 * the term 'setting', but 'option' is more reflective of the Wordpress concept.
@@ -197,28 +162,28 @@ class Plugin {
 			Plugin::$admin_menu_name . ' Settings',
 			Plugin::$admin_menu_name,
 			'manage_options',
-			Plugin::$slug . '-options', // This is the slug for the page.
+			$slug . '-options', // This is the slug for the page.
 			array( __CLASS__, 'main_admin_page' ),
 			plugins_url( 'images/logo.png', __FILE__ )
 		/** position */ ); // We're using the default position.
 		// Add the 'settings' page.
 		add_submenu_page(
-			Plugin::$slug . '-options', // Refers to the main page.
+			$slug . '-options', // Refers to the main page.
 			Plugin::$admin_menu_name . ' Settings',
 			'Settings',
 			'manage_options',
 			// We want Settings to be the top-level menu, so we use the main menu's slug as this page's slug.
 			// http://wordpress.stackexchange.com/questions/66498/add-menu-page-with-different-name-for-first-submenu-item
-			Plugin::$slug . '-options',
+			$slug . '-options',
 			array( __CLASS__, 'settings_page' )
 		);
 		// Add the 'support' page.
 		add_submenu_page(
-			Plugin::$slug . '-options', // Refers to the main page.
+			$slug . '-options', // Refers to the main page.
 			Plugin::$admin_menu_name . ' Support',
 			'Support',
 			'manage_options',
-			Plugin::$slug . '-support',
+			$slug . '-support',
 			array( __CLASS__, 'support_page' )
 		);
 	}
@@ -276,16 +241,17 @@ class Plugin {
 		 * Set up the plugin's page.
 		 */
 		// What's the name of the plugin's page?
-		$pagename = Plugin::$page_name;
+		$pagename = Plugin::getBasename('-');
 		// Has the plugin already created the page?
 		$page = Plugin::get_page_by_name( $pagename );
 		// If not...
 		if ( empty( $page ) ) {
 			// ...let's do so now.
+			$shortcode = Plugin::getBasename('-'); // The content of the post is just the shortcode.
 			$new = array(
 				'post_name'    => $pagename,
 				'post_title'   => Plugin::$page_title,
-				'post_content' => '[' . Plugin::$shortcode . ']',
+				'post_content' => '[' . $shortcode . ']',
 				// The content is just an instance of the short code.
 				'post_status'  => 'publish',
 				'post_type'    => 'page'
@@ -312,7 +278,7 @@ class Plugin {
 	 */
 	static function on_deactivate() {
 		// Let's see if the plugin's page exists.
-		$page_name = Plugin::$page_name;
+		$page_name = Plugin::getBasename('-');
 		$page      = Plugin::get_page_by_name( $page_name );
 		// If we find it...
 		if ( ! empty( $page ) ) {
@@ -336,7 +302,7 @@ class Plugin {
 	 */
 	static function on_uninstall() {
 		// Let's see if the plugin's page exists.
-		$page_name = Plugin::$page_name;
+		$page_name = Plugin::getBasename('-');
 		$page      = Plugin::get_page_by_name( $page_name );
 		// If our page exists...
 		if ( ! empty( $page ) ) {
