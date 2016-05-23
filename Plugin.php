@@ -12,11 +12,11 @@ namespace gc\wp\reference;
 /**
  * The plugin registers the widget class.
  */
-include_once 'widget-class.php';
+include_once 'Widget.php';
 /**
  * The plugin creates the tables.
  */
-include_once 'tables-class.php';
+include_once 'Tables.php';
 /**
  * The plugin class delegates responsibilities for settings (options) to the Options class.
  */
@@ -101,7 +101,7 @@ class Plugin {
 	/**
 	 * String used as the default slug (or slug prefix).
 	 *
-	 * @since 1.0.0.0
+	 * @since 1.0.0
 	 * @access private
 	 * @var string $slug the string to use as the default slug (or slug prefix)
 	 * @link http://codex.wordpress.org/Glossary#Slug

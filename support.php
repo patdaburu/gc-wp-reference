@@ -15,7 +15,7 @@ use gc\wp\reference\Plugin as Plugin;
 /**
  *  The page requires the plugin's class.
  */
-include_once "plugin-class.php";
+include_once "Plugin.php";
 ?>
 <div class="wrap">
 	<h2><?= Plugin::$admin_menu_name; ?> Support</h2>

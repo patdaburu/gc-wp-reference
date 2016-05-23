@@ -12,7 +12,7 @@
 /**
  * We need the Plugin class.
  */
-include_once 'plugin-class.php';
+include_once 'Plugin.php';
 use gc\wp\reference\Plugin as Plugin;
 
 /**

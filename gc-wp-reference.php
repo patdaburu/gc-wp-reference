@@ -16,7 +16,7 @@
 use gc\wp\reference\Plugin as Plugin;
 
 // Include the class that defines the plugin's core behavior.
-include_once "plugin-class.php";
+include_once "Plugin.php";
 
 /*
 Note:  It has been possible (intermittently) to register hooks in the plugin class.  However, registering in the main
