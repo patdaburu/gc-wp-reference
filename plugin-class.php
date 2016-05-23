@@ -1,21 +1,26 @@
 <?php
 namespace gc\wp\reference;
 /**
- * GC_Reference class, the main class in the plugin
+ * Plugin class, the main class in the plugin
  *
- * This module contains the GC_Reference class which principally defines the plugin's behavior.
+ * This module contains the Plugin class which principally defines the plugin's behavior.
  *
- * @since 1.0.0.0
+ * @since 1.0.0
  */
 ?>
 <?php
 /**
- * The plugins registers the widget class.
+ * The plugin registers the widget class.
  */
 include_once 'widget-class.php';
 
 /**
- * Entry point for the GC_Reference plugin.
+ * The plugin creates the tables.
+ */
+include_once 'plugin-tables.php';
+
+/**
+ * Entry point for the plugin.
  *
  * Description: In this context, the class serves as a namespace for a collection of static functions that define
  *              the plugin.
@@ -24,11 +29,19 @@ include_once 'widget-class.php';
 class Plugin {
 
 	/**
+	 * The plugin version.
+	 *
+	 * @access public
+	 * @since 1.0.0
+	 */
+	const VERSION = '1.0.0';
+
+	/**
 	 * The name used to refer to the plugin in administrative menus.
 	 * @since 1.0.0.0
 	 * @access private
 	 * @var string $admin_menu_name the name used to refer to the plugin in administrative menus
-	 * @see GC_Reference::on_admin_menu
+	 * @see Plugin::on_admin_menu
 	 */
 	public static $admin_menu_name = 'GC Reference';
 
@@ -77,7 +90,7 @@ class Plugin {
 	 * @access private
 	 * @var string $slug the string to use as the default slug (or slug prefix)
 	 * @link http://codex.wordpress.org/Glossary#Slug
-	 * @see GC_Reference::shortcode
+	 * @see Plugin::shortcode
 	 */
 	private static $slug = 'gc-reference';
 
@@ -102,6 +115,20 @@ class Plugin {
 	 * @link https://developer.wordpress.org/reference/functions/register_setting/
 	 */
 	public static $options_name = 'gc_reference';
+
+	/**
+	 * Returns the plugin basename.
+	 *
+	 * Use this method to retrieve the plugin's basename in a form suitable to the current purpose.
+	 *
+	 * @param string $sep The separator to use between word breaks in the basename.
+	 *
+	 * @return mixed The basename string.
+	 */
+	static function getBasename($sep = '_'){
+		// Replace the backslashes in the namespace with the separator character ($sep).
+		return str_replace('\\', $sep, __NAMESPACE__);
+	}
 
 	/**
 	 * Starts the plugin.
@@ -240,6 +267,20 @@ class Plugin {
 		if ( version_compare( $wp_version, '4.5', '<' ) ) { // TODO: Move the magic string.
 			wp_die( "This plugin requires WordPress version 4.5 or higher." );
 		}
+
+		/**
+		 * Create (or update) the database.
+		 */
+		if(!Tables::areInstalled()){
+			Tables::create();
+		}
+		else if(!Tables::areUpToDate()){
+			Tables::upgrade();
+		}
+
+		/**
+		 * Set up the plugin's page.
+		 */
 		// What's the name of the plugin's page?
 		$pagename = Plugin::$page_name;
 		// Has the plugin already created the page?
