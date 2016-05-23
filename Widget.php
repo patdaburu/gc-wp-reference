@@ -1,5 +1,10 @@
 <?php
 namespace gc\wp\reference;
+
+/**
+ * We need access to members of the Plugin class.
+ */
+include_once 'Plugin.php';
 /**
  * GC_ReferenceWidget
  *
@@ -11,22 +16,49 @@ namespace gc\wp\reference;
  */
 class Widget extends \WP_Widget {
 
+	/**
+	 * Widget properties.
+	 *
+	 * Defines widget properties to override default values.
+	 *
+	 * @var array Properties that define this widget.
+	 * @type string html_id_prefix The prefix applied to the HTML element ID when the widget is rendered on the page.
+	 * @type string html_classname The class name added to the HTML tag wrapping the widget when it's displayed.
+	 *                             (It may show up in a <div>, <aside>, <li>, or other HTML tag.)
+	 * @type string widget_name The name of the widget as it appears in the Widgets dashboard menu.
+	 * @type string widget_description The descripiton of the widget that appears in the Widgets dashboard menu.
+	 */
+	private $definition = array();
+
+	/**
+	 * Widget constructor.
+	 */
 	function __construct() {
+		// Mix the defined widget properties with the defaults.
+		$my = wp_parse_args($this->definition, array(
+			'html_id_prefix'     => Plugin::get_base_name('-') . '-widget',
+			'html_classname'     => Plugin::get_base_name('_') . '_widget',
+			'widget_name'        => Plugin::get_base_title().' Widget',
+			'widget_description' => 'This widget needs a description!'
+		));
+
 		// Create the options we'll provide to the parent class' constructor.
 		$widget_opts = array(
 			/**
 			 * the class name added to the HTML tag wrapping the widget when it's displayed (It may show up in a
 			 * <div>, <aside>, <li>, or other HTML tag.)
 			 */
-			'classname' => 'gc_reference_widget',
+			'classname' => $my['html_classname'],
 			/**
 			 * displayed on the widget dashboard below the widget name
 			 */
-			'description' => 'Example widget defined by the plugin\'s widget class.'
+			'description' => $my['widget_description']
 		);
+
+		// Call the parent's constructor.
 		parent::__construct(
-			'gc_reference_widget', // the widget's HTML ID prefix
-			'GC Reference Widget', // the widget's name
+			$my['html_id_prefix'], // the widget's HTML ID prefix
+			$my['widget_name'],
 			$widget_opts);
 	}
 
@@ -77,8 +109,8 @@ class Widget extends \WP_Widget {
 		// Provide default widget properties.
 		$defaults = array(
 			'title' => 'My Biography',
-			'name' => 'Dudley Do-Right',
-			'bio' => 'I am a royal Canadian Mountie.'
+			'name'  => 'Dudley Do-Right',
+			'bio'   => 'I am a Royal Canadian Mountie.'
 		);
 		// Combine the defaults with the properties in the current widget settings.
 		$instance = wp_parse_args((array)$instance, $defaults);

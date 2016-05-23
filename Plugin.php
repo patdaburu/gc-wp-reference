@@ -69,20 +69,40 @@ class Plugin {
 	 */
 	private static $page_title = 'GeoComm WordPress Reference Plugin';
 
-
-
 	/**
-	 * Returns the plugin basename.
+	 * Gets the plugin basename.
 	 *
 	 * Use this method to retrieve the plugin's basename in a form suitable to the current purpose.
 	 *
 	 * @param string $sep The separator to use between word breaks in the basename.
 	 *
-	 * @return mixed The basename string.
+	 * @return string The basename string.
 	 */
-	static function getBasename($sep = '_'){
+	static function get_base_name($sep = '_'){
 		// Replace the backslashes in the namespace with the separator character ($sep).
 		return str_replace('\\', $sep, __NAMESPACE__);
+	}
+
+	/**
+	 * Gets the plugin's text domain.
+	 *
+	 * @return string
+	 */
+	static function get_text_domain(){
+		return Plugin::get_base_name('-');
+	}
+
+	/**
+	 * Gets the base title string for the plugin.
+	 *
+	 * @see Plugin::get_basename()
+	 * @return string
+	 */
+	static function get_base_title(){
+		// Start by getting the base name for the plugin as a string.
+		$basename = Plugin::get_base_name(' ');
+		// Uppercase the words and return the string.
+		return ucwords($basename);
 	}
 
 	/**
@@ -99,7 +119,7 @@ class Plugin {
 
 		// Add the shortcode for a plugin.  The shortcode for this plugin will be the 'base name' with dashes used as
 		// word boundaries.  (If you need more shortcodes, create additional functions and calls to add_shortcode).
-		add_shortcode( Plugin::getBasename('-'), array( __CLASS__, 'shortcode' ) );
+		add_shortcode( Plugin::get_base_name('-'), array( __CLASS__, 'shortcode' ) );
 
 		// Register the plugin's widget(s).
 		add_action('widgets_init', array(__CLASS__, 'on_widgets_init'));
@@ -136,7 +156,7 @@ class Plugin {
 		 */
 		load_plugin_textdomain(
 			// The text domain is the plugin's "base name" with dashes substituted in for word boundaries.
-			Plugin::getBasename('-'),
+			Plugin::get_text_domain(),
 			false, plugin_basename( dirname( __FILE__ ) . '/localization' ) );
 	}
 
@@ -152,7 +172,7 @@ class Plugin {
 	 */
 	static function on_admin_menu() {
 		// Establish the slug for the menu pages (based on the plugin's base name).
-		$slug = Plugin::getBasename('-');
+		$slug = Plugin::get_base_name('-');
 		/**
 		 * Note:  The terms 'settings' and 'options' are used somewhat interchangeably.  Labels will typically use
 		 * the term 'setting', but 'option' is more reflective of the Wordpress concept.
@@ -241,13 +261,13 @@ class Plugin {
 		 * Set up the plugin's page.
 		 */
 		// What's the name of the plugin's page?
-		$pagename = Plugin::getBasename('-');
+		$pagename = Plugin::get_base_name('-');
 		// Has the plugin already created the page?
 		$page = Plugin::get_page_by_name( $pagename );
 		// If not...
 		if ( empty( $page ) ) {
 			// ...let's do so now.
-			$shortcode = Plugin::getBasename('-'); // The content of the post is just the shortcode.
+			$shortcode = Plugin::get_base_name('-'); // The content of the post is just the shortcode.
 			$new = array(
 				'post_name'    => $pagename,
 				'post_title'   => Plugin::$page_title,
@@ -278,7 +298,7 @@ class Plugin {
 	 */
 	static function on_deactivate() {
 		// Let's see if the plugin's page exists.
-		$page_name = Plugin::getBasename('-');
+		$page_name = Plugin::get_base_name('-');
 		$page      = Plugin::get_page_by_name( $page_name );
 		// If we find it...
 		if ( ! empty( $page ) ) {
@@ -302,7 +322,7 @@ class Plugin {
 	 */
 	static function on_uninstall() {
 		// Let's see if the plugin's page exists.
-		$page_name = Plugin::getBasename('-');
+		$page_name = Plugin::get_base_name('-');
 		$page      = Plugin::get_page_by_name( $page_name );
 		// If our page exists...
 		if ( ! empty( $page ) ) {

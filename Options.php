@@ -85,6 +85,6 @@ class Options {
  */
 
 // The options group name for the plugin is built upon the plugin's namespace.
-Options::$options_group = Plugin::getBasename('-').'-settings-group';
+Options::$options_group = Plugin::get_base_name('-') . '-settings-group';
 // The options name is also based on the plugin's namespace.
-Options::$options_name = Plugin::getBasename('_');
+Options::$options_name = Plugin::get_base_name('_');

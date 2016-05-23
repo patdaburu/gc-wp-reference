@@ -9,7 +9,7 @@ This project is a sample WordPress plugin that can be used as a reference templa
   - registering options,
   - creating admin pages,
   - creating custom widgets,
-  - registering custom tables,
+  - creating custom tables,
   - and other interesting stuff.
 
 Installation

@@ -1,8 +1,8 @@
 <?php
 /*
  * Plugin Name: GeoComm Reference Plugin
- * Plugin URI: https://github.com/patdaburu
- * Description: A reference template for plugin development.
+ * Plugin URI: https://github.com/patdaburu/gc-wp-reference
+ * Description: A reference template for plugin development. (Change these values in the header of the main file.)
  * Version: 1.0.0.0
  * Author: Pat Blair
  * Author URI: https://github.com/patdaburu

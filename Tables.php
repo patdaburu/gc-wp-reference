@@ -30,7 +30,7 @@ class Tables {
 		global $wpdb;
 		// Define the custom table name.  (This example creates the table name by concatenating the WordPress prefix
 		// and the plugin's basename.)
-		$table_name = $wpdb->prefix.Plugin::getBasename('_'); // Extend the basename to create additional tables.
+		$table_name = $wpdb->prefix.Plugin::get_base_name('_'); // Extend the basename to create additional tables.
 		// Now we just do some straight-up SQL work.
 		$sql = "CREATE TABLE ".$table_name."(
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -79,7 +79,7 @@ class Tables {
 		// We'll need the WordPress database global.
 		global $wpdb;
 		// Delete the custom table(s) from the database.
-		$table_name = $wpdb->prefix.Plugin::getBasename('_');
+		$table_name = $wpdb->prefix.Plugin::get_base_name('_');
 		$wpdb->query("DROP TABLE IF EXISTS $table_name");
 		// Delete the WordPress option that contains the database version.
 		delete_option(Tables::$db_version_option);
@@ -108,7 +108,7 @@ class Tables {
 	 */
 	public static function areUpToDate(){
 		// Get the installed version from the WordPress options.
-		$installed_version = get_option(Plugin::getBasename('_').'_db_version');
+		$installed_version = get_option( Plugin::get_base_name('_') . '_db_version');
 		// Whether or not an upgrade is required depends on whether or not the current plugin version matches the
 		// database version we set in the WordPress options the last time we created (or upgraded) the database.
 		return $installed_version == Plugin::VERSION;
@@ -120,4 +120,4 @@ class Tables {
  */
 
 // What's the name of the WordPress option that holds the DB version?
-Tables::$db_version_option = Plugin::getBasename('_').'_db_version';
+Tables::$db_version_option = Plugin::get_base_name('_') . '_db_version';
