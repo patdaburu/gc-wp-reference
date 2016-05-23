@@ -14,7 +14,7 @@ This project is a sample WordPress plugin that can be used as a reference templa
 
 Installation
 ------------
-1.  Create a directory called gc-wp-reference in your [WordPress installation's plugins directory](https://codex.wordpress.org/Determining_Plugin_and_Content_Directories).
+1.  Create a directory called `gc-wp-reference` in your [WordPress installation's plugins directory](https://codex.wordpress.org/Determining_Plugin_and_Content_Directories) which can almost certainly be found at `wp-content/plugins`.
 2.  Place this project's files under that directory.
 3.  Start modifying.
 
