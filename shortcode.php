@@ -19,6 +19,7 @@ use gc\wp\reference\Options as Options;
 $plugin_options = get_option( Options::$options_name );
 
 // Import the supplied attributes ($atts) into the current symbol table.
+/** @noinspection PhpUndefinedVariableInspection */
 extract(
 	shortcode_atts( array(
 		'color' => 'red' // Set defaults.
@@ -29,10 +30,12 @@ extract(
 
 ?>
 <!-- Import JavaScripts -->
-<script type='text/javascript' src='<?=plugins_url( '/js/main.js', __FILE__ )?>'></script>
+<script type='text/javascript' src='<?= plugins_url( '/js/main.js', __FILE__ ) ?>'></script>
 
 <!-- Now let's write some HTML -->
 <h2>Define the shortcode output.</h2>
-<p>Email (option) = <?=$plugin_options['email']?></p>
-<p>Color (attribute) = <?=$color?></p>
-<p>To prove JavaScript is working, this timestamp will change periodically as the page reloads: <?=date("h:i:sa")?></p>
+<p>Email (option) = <?= $plugin_options['email'] ?></p>
+<p>Color (attribute) = <?= /** @noinspection PhpUndefinedVariableInspection */
+	$color ?></p>
+<p>To prove JavaScript is working, this timestamp will change periodically as the page
+	reloads: <?= date( "h:i:sa" ) ?></p>

@@ -26,7 +26,7 @@ class Widget extends \WP_Widget {
 	 * @type string html_classname The class name added to the HTML tag wrapping the widget when it's displayed.
 	 *                             (It may show up in a <div>, <aside>, <li>, or other HTML tag.)
 	 * @type string widget_name The name of the widget as it appears in the Widgets dashboard menu.
-	 * @type string widget_description The descripiton of the widget that appears in the Widgets dashboard menu.
+	 * @type string widget_description The description of the widget that appears in the Widgets dashboard menu.
 	 */
 	private $definition = array();
 
@@ -114,9 +114,12 @@ class Widget extends \WP_Widget {
 		);
 		// Combine the defaults with the properties in the current widget settings.
 		$instance = wp_parse_args((array)$instance, $defaults);
-		$title = $instance['title'];
-		$name = $instance['name'];
-		$bio = $instance['bio'];
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		$title = $instance['title']; // (Used in widget-form.php.)
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		$name = $instance['name']; // (Used in widget-form.php.)
+		/** @noinspection PhpUnusedLocalVariableInspection */
+		$bio = $instance['bio']; // (Used in widget-form.php.)
 		// Provide HTML to the caller.
 		include "widget-form.php";
 	}

@@ -58,7 +58,7 @@ class Options {
 	 *
 	 * This callback is passed to WordPress when the plugin registers its settings.
 	 *
-	 * @param $input An array of form input values.
+	 * @param mixed $input An array of form input values.
 	 * @see Options::register_settings()
 	 *
 	 * @return mixed

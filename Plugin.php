@@ -130,7 +130,7 @@ class Plugin {
 		register_activation_hook( __FILE__, array( __CLASS__, 'on_activate' ) );
 		// Set up the actions to perform on deactivation.
 		register_deactivation_hook( __FILE__, array( __CLASS__, 'on_deactivate' ) );
-		// Set up the actions to perform on uninstallation.
+		// Set up the actions to perform on un-installation.
 		register_uninstall_hook( __FILE__, array( __CLASS__, 'on_uninstall' ) );
 		*/
 
@@ -175,7 +175,7 @@ class Plugin {
 		$slug = Plugin::get_base_name('-');
 		/**
 		 * Note:  The terms 'settings' and 'options' are used somewhat interchangeably.  Labels will typically use
-		 * the term 'setting', but 'option' is more reflective of the Wordpress concept.
+		 * the term 'setting', but 'option' is more reflective of the WordPress concept.
 		 */
 		// Add the main menu page.
 		add_menu_page(
@@ -376,7 +376,7 @@ class Plugin {
 	/**
 	 * Returns HTML for the plugin's shortcode.
 	 *
-	 * @param $atts The shortcode attributes.
+	 * @param mixed $atts The shortcode attributes.
 	 * @param null $content
 	 *
 	 * @return string The shortcode HTML.
@@ -403,9 +403,9 @@ class Plugin {
 	 * @since 1.0.0
 	 * @see get_pages()
 	 *
-	 * @param type $page_name The name of the page to find.
+	 * @param mixed $page_name The name of the page to find.
 	 *
-	 * @return the page, or null if no such page exists.
+	 * @return mixed the page, or null if no such page exists.
 	 */
 	private static function get_page_by_name( $page_name ) {
 		// We are interested in pages that have been published, as well as private pages.

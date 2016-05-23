@@ -8,6 +8,7 @@
  * @since 1.0.0
  */
 ?>
+<!--suppress HtmlFormInputWithoutLabel -->
 <p>Title:
 	<input class="widefat"
 	       name="<?= $this->get_field_name('title')?>"
@@ -21,8 +22,7 @@
 	       value="<?=esc_attr($name)?>"/>
 </p>
 <p>Bio:
-	<input class="widefat"
+	<textarea class="widefat"
 	       name="<?= $this->get_field_name('bio')?>"
-	       type="text"
-	       value="<?=esc_textarea($bio)?>"></textarea>
+	       type="text"><?=esc_textarea($bio)?></textarea>
 </p>

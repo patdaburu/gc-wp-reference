@@ -11,7 +11,7 @@ namespace gc\wp\reference;
 class Tables {
 
 	/**
-	 * @var The name of the WordPress option that contains the database version.
+	 * @var string The name of the WordPress option that contains the database version.
 	 */
 	public static $db_version_option = null;
 

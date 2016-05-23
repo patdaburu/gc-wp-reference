@@ -68,7 +68,7 @@ register_deactivation_hook( __FILE__, 'on_deactivate');
 function on_uninstall(){
     Plugin::on_uninstall();
 }
-// Set up the actions to perform on uninstallation.
+// Set up the actions to perform on un-installation.
 register_uninstall_hook( __FILE__, 'on_uninstall');
 
 // Start up the plugin.
