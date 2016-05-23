@@ -3,8 +3,8 @@ namespace gc\wp\reference;
 /**
  * Tables class, MySQL database handling.
  *
- * This module contains the Tables class which is responsible for the creation and upgrading of the plugin's custom
- * MySQL tables.
+ * This module contains the Tables class (a collection of static functions) which is responsible for the creation and
+ * upgrading of the plugin's custom MySQL tables.
  *
  * @since 1.0.0
  */
@@ -30,7 +30,7 @@ class Tables {
 		global $wpdb;
 		// Define the custom table name.  (This example creates the table name by concatenating the WordPress prefix
 		// and the plugin's basename.)
-		$table_name = $wpdb->prefix.Plugin::getBasename('_');
+		$table_name = $wpdb->prefix.Plugin::getBasename('_'); // Extend the basename to create additional tables.
 		// Now we just do some straight-up SQL work.
 		$sql = "CREATE TABLE ".$table_name."(
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -65,6 +65,24 @@ class Tables {
 
 		// Update the WordPress option that holds the database version.
 		update_option(Tables::$db_version_option, Plugin::VERSION);
+	}
+
+	/**
+	 * Remove traces of the custom tables.
+	 */
+	public static function uninstall(){
+		// If nothing is installed...
+		if(!Tables::areInstalled()){
+			// ...there's nothing to do.
+			return;
+		}
+		// We'll need the WordPress database global.
+		global $wpdb;
+		// Delete the custom table(s) from the database.
+		$table_name = $wpdb->prefix.Plugin::getBasename('_');
+		$wpdb->query("DROP TABLE IF EXISTS $table_name");
+		// Delete the WordPress option that contains the database version.
+		delete_option(Tables::$db_version_option);
 	}
 
 	/**

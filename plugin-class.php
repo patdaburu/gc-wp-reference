@@ -17,7 +17,7 @@ include_once 'widget-class.php';
 /**
  * The plugin creates the tables.
  */
-include_once 'plugin-tables.php';
+include_once 'tables-class.php';
 
 /**
  * Entry point for the plugin.
@@ -35,6 +35,18 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	const VERSION = '1.0.0';
+
+	/**
+	 * Does the plugin require custom tables?
+	 *
+	 * If the plugin uses custom tables, the Plugin class will execute functions to create the tables on activation,
+	 * remove them when the plugin is uninstalled, and so on.
+	 *
+	 * @see Plugin::on_activate()
+	 * @see Tables
+	 * @since 1.0.0
+	 */
+	const USES_CUSTOM_TABLES = true;
 
 	/**
 	 * The name used to refer to the plugin in administrative menus.
@@ -271,11 +283,16 @@ class Plugin {
 		/**
 		 * Create (or update) the database.
 		 */
-		if(!Tables::areInstalled()){
-			Tables::create();
-		}
-		else if(!Tables::areUpToDate()){
-			Tables::upgrade();
+		if(Plugin::USES_CUSTOM_TABLES){ // If the plugin uses custom tables at all, let's get to work...
+			// If the tables haven't been installed...
+			if(!Tables::areInstalled()){
+				// ...create them now.
+				Tables::create();
+			}
+			else if(!Tables::areUpToDate()){ // If they've been installed, but aren't up to date...
+				// ...upgrade them.
+				Tables::upgrade();
+			}
 		}
 
 		/**
@@ -348,6 +365,13 @@ class Plugin {
 		if ( ! empty( $page ) ) {
 			// ...delete it (bypassing the trash).
 			wp_delete_post( $page->ID, true );
+		}
+		/**
+		 * Remove custom database artifacts.
+		 */
+		if(Plugin::USES_CUSTOM_TABLES){ // If this plugin uses custom tables...
+			// ...clean them up.
+			Tables::uninstall();
 		}
 	}
 
