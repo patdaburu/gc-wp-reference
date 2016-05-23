@@ -1,4 +1,5 @@
 <?php
+namespace gc\wp\reference;
 /**
  * GC_Reference class, the main class in the plugin
  *
@@ -8,7 +9,6 @@
  */
 ?>
 <?php
-
 /**
  * The plugins registers the widget class.
  */
@@ -21,7 +21,7 @@ include_once 'widget-class.php';
  *              the plugin.
  * @since 1.0.0.0
  */
-class GC_Reference {
+class Plugin {
 
 	/**
 	 * The name used to refer to the plugin in administrative menus.
@@ -117,7 +117,7 @@ class GC_Reference {
 
 		// Add the shortcode for a plugin.  (If you need more shortcodes, create additional functions and calls to
 		// add_shortcode).
-		add_shortcode( GC_Reference::$shortcode, array( __CLASS__, 'shortcode' ) );
+		add_shortcode( Plugin::$shortcode, array( __CLASS__, 'shortcode' ) );
 
 		// Register the plugin's widget(s).
 		add_action('widgets_init', array(__CLASS__, 'on_widgets_init'));
@@ -153,7 +153,7 @@ class GC_Reference {
 		 * Load the internationalization files.
 		 */
 		load_plugin_textdomain(
-			GC_Reference::$text_domain,
+			Plugin::$text_domain,
 			false, plugin_basename( dirname( __FILE__ ) . '/localization' ) );
 	}
 
@@ -174,31 +174,31 @@ class GC_Reference {
 		 */
 		// Add the main menu page.
 		add_menu_page(
-			GC_Reference::$admin_menu_name . ' Settings',
-			GC_Reference::$admin_menu_name,
+			Plugin::$admin_menu_name . ' Settings',
+			Plugin::$admin_menu_name,
 			'manage_options',
-			GC_Reference::$slug . '-options', // This is the slug for the page.
+			Plugin::$slug . '-options', // This is the slug for the page.
 			array( __CLASS__, 'main_admin_page' ),
 			plugins_url( 'images/logo.png', __FILE__ )
 		/** position */ ); // We're using the default position.
 		// Add the 'settings' page.
 		add_submenu_page(
-			GC_Reference::$slug . '-options', // Refers to the main page.
-			GC_Reference::$admin_menu_name . ' Settings',
+			Plugin::$slug . '-options', // Refers to the main page.
+			Plugin::$admin_menu_name . ' Settings',
 			'Settings',
 			'manage_options',
 			// We want Settings to be the top-level menu, so we use the main menu's slug as this page's slug.
 			// http://wordpress.stackexchange.com/questions/66498/add-menu-page-with-different-name-for-first-submenu-item
-			GC_Reference::$slug . '-options',
+			Plugin::$slug . '-options',
 			array( __CLASS__, 'settings_page' )
 		);
 		// Add the 'support' page.
 		add_submenu_page(
-			GC_Reference::$slug . '-options', // Refers to the main page.
-			GC_Reference::$admin_menu_name . ' Support',
+			Plugin::$slug . '-options', // Refers to the main page.
+			Plugin::$admin_menu_name . ' Support',
 			'Support',
 			'manage_options',
-			GC_Reference::$slug . '-support',
+			Plugin::$slug . '-support',
 			array( __CLASS__, 'support_page' )
 		);
 	}
@@ -218,8 +218,8 @@ class GC_Reference {
 		// Register the plugin's settings with WordPress.  Note that the third argument is the callback WordPress will
 		// use to sanitize incoming values.
 		register_setting(
-			GC_Reference::$option_group,
-			GC_Reference::$options_name,
+			Plugin::$option_group,
+			Plugin::$options_name,
 			array( __CLASS__, 'sanitize_options' ) );
 	}
 
@@ -241,16 +241,16 @@ class GC_Reference {
 			wp_die( "This plugin requires WordPress version 4.5 or higher." );
 		}
 		// What's the name of the plugin's page?
-		$pagename = GC_Reference::$page_name;
+		$pagename = Plugin::$page_name;
 		// Has the plugin already created the page?
-		$page = GC_Reference::get_page_by_name( $pagename );
+		$page = Plugin::get_page_by_name( $pagename );
 		// If not...
 		if ( empty( $page ) ) {
 			// ...let's do so now.
 			$new = array(
 				'post_name'    => $pagename,
-				'post_title'   => GC_Reference::$page_title,
-				'post_content' => '[' . GC_Reference::$shortcode . ']',
+				'post_title'   => Plugin::$page_title,
+				'post_content' => '[' . Plugin::$shortcode . ']',
 				// The content is just an instance of the short code.
 				'post_status'  => 'publish',
 				'post_type'    => 'page'
@@ -277,8 +277,8 @@ class GC_Reference {
 	 */
 	static function on_deactivate() {
 		// Let's see if the plugin's page exists.
-		$page_name = GC_Reference::$page_name;
-		$page      = GC_Reference::get_page_by_name( $page_name );
+		$page_name = Plugin::$page_name;
+		$page      = Plugin::get_page_by_name( $page_name );
 		// If we find it...
 		if ( ! empty( $page ) ) {
 			// ...set its status to 'private'.
@@ -301,8 +301,8 @@ class GC_Reference {
 	 */
 	static function on_uninstall() {
 		// Let's see if the plugin's page exists.
-		$page_name = GC_Reference::$page_name;
-		$page      = GC_Reference::get_page_by_name( $page_name );
+		$page_name = Plugin::$page_name;
+		$page      = Plugin::get_page_by_name( $page_name );
 		// If our page exists...
 		if ( ! empty( $page ) ) {
 			// ...delete it (bypassing the trash).
@@ -311,12 +311,15 @@ class GC_Reference {
 	}
 
 	/**
+	 * Registers plugin widgets.
 	 *
 	 * @see register_widget
 	 * @link https://developer.wordpress.org/reference/functions/register_widget/
 	 */
 	static function on_widgets_init() {
-		register_widget('GC_ReferenceWidget');
+		// We make the asumption that the widget class is in the same namespace as the plugin class.  If this isn't
+		// the case, adjust the argument.
+		register_widget(__NAMESPACE__.'\Widget');
 	}
 
 	/**

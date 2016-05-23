@@ -8,14 +8,17 @@
  */
 ?>
 <?php
-
+/**
+ * Import the plugin namespace.  (We'll reference static members of the plugin class.)
+ */
+use gc\wp\reference\Plugin as Plugin;
 /**
  *  The page requires the plugin's class.
  */
 include_once "plugin-class.php";
 
 // Retrieve the options array for the plugin.
-$plugin_options = get_option( GC_Reference::$options_name );
+$plugin_options = get_option( Plugin::$options_name );
 
 // Import the supplied attributes ($atts) into the current symbol table.
 extract(

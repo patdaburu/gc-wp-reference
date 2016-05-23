@@ -9,17 +9,21 @@
 ?>
 <?php
 /**
+ * Import the plugin namespace.  (We'll reference static members of the plugin class.)
+ */
+use gc\wp\reference\Plugin as Plugin;
+/**
  *  The page requires the plugin's class.
  */
 include_once "plugin-class.php";
 // We'll make frequent reference to the name of the plugin's options array, so let's put it into a local variable
 // now.
-$options_name = GC_Reference::$options_name;
+$options_name = Plugin::$options_name;
 ?>
 <div class="wrap">
-	<h2><?= GC_Reference::$admin_menu_name; ?> Settings</h2>
+	<h2><?= Plugin::$admin_menu_name; ?> Settings</h2>
 	<form method="post" action="options.php">
-		<?php settings_fields( GC_Reference::$option_group ); ?>
+		<?php settings_fields( Plugin::$option_group ); ?>
 		<?php $plugin_options = get_option( $options_name ); ?>
 		<table class="form-table">
 			<tr valign="top">

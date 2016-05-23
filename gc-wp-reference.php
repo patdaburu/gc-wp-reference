@@ -12,6 +12,9 @@
 ?>
 <?php
 
+// Import the plugin namespace.
+use gc\wp\reference\Plugin as Plugin;
+
 // Include the class that defines the plugin's core behavior.
 include_once "plugin-class.php";
 
@@ -31,7 +34,7 @@ file has proven to be more reliable.
  * @see GC_Reference::on_activate()
  */
 function on_activate(){
-	GC_Reference::on_activate();
+	Plugin::on_activate();
 }
 // Set up the actions to perform on activation.
 register_activation_hook( __FILE__, 'on_activate');
@@ -47,7 +50,7 @@ register_activation_hook( __FILE__, 'on_activate');
  * @see GC_Reference::on_deactivate()
  */
 function on_deactivate(){
-	GC_Reference::on_deactivate();
+	Plugin::on_deactivate();
 }
 // Set up the actions to perform on deactivation.
 register_deactivation_hook( __FILE__, 'on_deactivate');
@@ -63,11 +66,11 @@ register_deactivation_hook( __FILE__, 'on_deactivate');
  * @see GC_Reference::on_uninstall()
  */
 function on_uninstall(){
-    GC_Reference::on_uninstall();
+    Plugin::on_uninstall();
 }
 // Set up the actions to perform on uninstallation.
 register_uninstall_hook( __FILE__, 'on_uninstall');
 
 // Start up the plugin.
-GC_Reference::startup();
+Plugin::startup();
 ?>
