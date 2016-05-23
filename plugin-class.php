@@ -13,11 +13,14 @@ namespace gc\wp\reference;
  * The plugin registers the widget class.
  */
 include_once 'widget-class.php';
-
 /**
  * The plugin creates the tables.
  */
 include_once 'tables-class.php';
+/**
+ * The plugin class delegates responsibilities for settings (options) to the Options class.
+ */
+include_once 'Options.php';
 
 /**
  * Entry point for the plugin.
@@ -105,29 +108,7 @@ class Plugin {
 	 * @see Plugin::shortcode
 	 */
 	private static $slug = 'gc-reference';
-
-	/**
-	 * Identifier for the plugin's option group.
-	 *
-	 * @since 1.0.0.0
-	 * @access public
-	 * @var string $option_group the string to use as the default slug (or slug prefix)
-	 * @link https://developer.wordpress.org/reference/functions/register_setting/
-	 */
-	public static $option_group = 'gc-reference-settings-group';
-
-	/**
-	 * Name of the plugin's options array.
-	 *
-	 * The plugin options are stored in a single array.
-	 *
-	 * @since 1.0.0.0
-	 * @access public
-	 * @var string $options_name name of the plugin's options array.
-	 * @link https://developer.wordpress.org/reference/functions/register_setting/
-	 */
-	public static $options_name = 'gc_reference';
-
+	
 	/**
 	 * Returns the plugin basename.
 	 *
@@ -250,16 +231,12 @@ class Plugin {
 	 * @ignore
 	 * @since 1.0.0
 	 * @see add_action()
-	 * @see GC_Reference::sanitize_options()
+	 * @see Options::register_settings()
 	 *
 	 */
 	static function register_settings() {
-		// Register the plugin's settings with WordPress.  Note that the third argument is the callback WordPress will
-		// use to sanitize incoming values.
-		register_setting(
-			Plugin::$option_group,
-			Plugin::$options_name,
-			array( __CLASS__, 'sanitize_options' ) );
+		// This task is delegated to the Options class.
+		Options::register_settings();
 	}
 
 	/**
@@ -398,8 +375,8 @@ class Plugin {
 	 * Write the 'settings' page HTML.
 	 */
 	static function settings_page() {
-		// The settings page is defined in settings.php.
-		include 'settings.php';
+		// This function is delegated to the Options class.
+		Options::settings_page();
 	}
 
 	/**
@@ -430,24 +407,7 @@ class Plugin {
 		// Return the HTML response.
 		return $res;
 	}
-
-	/**
-	 * Sanitizes option values.
-	 *
-	 * This callback is passed to WordPress when the plugin registers its settings.
-	 *
-	 * @param $input An array of form input values.
-	 * @see GC_Reference::register_settings()
-	 *
-	 * @return mixed
-	 */
-	static function sanitize_options( $input ) {
-		$input['option_name']  = sanitize_text_field( $input['option_name'] ); // sanitize text input
-		$input['option_email'] = sanitize_email( $input['option_email'] ); // sanitize the email
-		$input['option_url']   = esc_url( $input['option_url'] ); // sanitize a URL
-		return $input;
-	}
-
+	
 	/**
 	 * Get a page by name.
 	 *

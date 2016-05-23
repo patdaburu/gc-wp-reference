@@ -4,21 +4,19 @@
  *
  * This module defines the HTML returned when the plugin's shortcode is used.
  *
- * @since 1.0.0.0
+ * @since 1.0.0
  */
 ?>
 <?php
+
 /**
- * Import the plugin namespace.  (We'll reference static members of the plugin class.)
+ * We need the Options class.
  */
-use gc\wp\reference\Plugin as Plugin;
-/**
- *  The page requires the plugin's class.
- */
-include_once "plugin-class.php";
+include_once 'Options.php';
+use gc\wp\reference\Options as Options;
 
 // Retrieve the options array for the plugin.
-$plugin_options = get_option( Plugin::$options_name );
+$plugin_options = get_option( Options::$options_name );
 
 // Import the supplied attributes ($atts) into the current symbol table.
 extract(
@@ -35,6 +33,6 @@ extract(
 
 <!-- Now let's write some HTML -->
 <h2>Define the shortcode output.</h2>
-<p>Email (option) = <?=$plugin_options['option_email']?></p>
+<p>Email (option) = <?=$plugin_options['email']?></p>
 <p>Color (attribute) = <?=$color?></p>
 <p>To prove JavaScript is working, this timestamp will change periodically as the page reloads: <?=date("h:i:sa")?></p>
