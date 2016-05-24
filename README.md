@@ -28,6 +28,7 @@ So, before you really get rolling, change the namespace assignments in the these
 
   - [Options.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php)
   - [Plugin.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php)
+  - [Post.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Post.php)
   - [Tables.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Tables.php)
   - [Widget.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Widget.php)
 
