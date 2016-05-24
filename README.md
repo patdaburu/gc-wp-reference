@@ -27,7 +27,7 @@ The reference project's [main class] (https://github.com/patdaburu/gc-wp-referen
 So, before you really get rolling, change the namespace assignments in the these modules to reflect your plugin's name.
 
   - [Options.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php)
-  - [Plugins.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php)
+  - [Plugin.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php)
   - [Tables.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Tables.php)
   - [Widget.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Widget.php)
 
