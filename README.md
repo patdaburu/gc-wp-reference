@@ -16,9 +16,20 @@ Getting Started
 2.  Place this project's files under that directory.
 3.  Start modifying.
 
-About The Parent Directory
---------------------------
+The Plugin Directory
+--------------------
 The main point of entry in this project is `gc-wp-reference.php`.  To allow WordPress to load it correctly, the directory in which it resides should also be called `gc-wp-reference` as per WordPress conventions.  When you start building your plugin, the first thing you'll want to do is change the names of the directory and the main file to reflect your plugin's name.
+
+PHP Namepspaces
+---------------
+The reference project's [main class] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php) (`Plugin.php`) is defined in a namespace that generally represents the plugin name (`gc\wp\reference`).  The namespace is, of course, used to avoid naming conflicts, but is further used to create WordPress slugs, option group names, administrative menu titles, and so on.
+
+So, before you really get rolling, change the namespace assignments in the these modules to reflect your plugin's name.
+
+  - [Options.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php)
+  - [Plugins.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Plugin.php)
+  - [Tables.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Tables.php)
+  - [Widget.php] (https://github.com/patdaburu/gc-wp-reference/blob/master/Widget.php)
 
 Encouragement
 -------------
