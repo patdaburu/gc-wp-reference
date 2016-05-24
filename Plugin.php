@@ -12,11 +12,11 @@ namespace gc\wp\reference;
 /**
  * The plugin registers the widget class.
  */
-include_once 'Widget.php';
+include_once 'Widget.php'; // TODO: Include only if required?
 /**
  * The plugin creates the tables.
  */
-include_once 'Tables.php';
+include_once 'Tables.php'; // TODO: Include only if required?
 /**
  * The plugin class delegates responsibilities for settings (options) to the Options class.
  */
@@ -50,6 +50,8 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	const USES_CUSTOM_TABLES = true;
+
+	const HAS_CUSTOM_POST_TYPES = true;
 
 	/**
 	 * The name used to refer to the plugin in administrative menus.
@@ -158,6 +160,12 @@ class Plugin {
 			// The text domain is the plugin's "base name" with dashes substituted in for word boundaries.
 			Plugin::get_text_domain(),
 			false, plugin_basename( dirname( __FILE__ ) . '/localization' ) );
+		// If the plugin defines custom post types...
+		if(Plugin::HAS_CUSTOM_POST_TYPES){
+			// ...initialize the custom post types.
+			include_once 'Post.php';
+			Post::on_init();
+		}
 	}
 
 	/**
@@ -426,5 +434,4 @@ class Plugin {
 	}
 
 }
-
 ?>
