@@ -39,3 +39,10 @@ extract(
 	$color ?></p>
 <p>To prove JavaScript is working, this timestamp will change periodically as the page
 	reloads: <?= date( "h:i:sa" ) ?></p>
+
+<!--
+Refreshing an IFrame:  Uncomment the lines below and point the iframe at a target on the local domain (ie. same host
+name, protocol, and port).  Then go to js/main.js, comment out the line that refreshes the page and uncomment the line
+that refreshes the iframe.
+-->
+<!--<iframe id="myIFrame" src="/phpinfo.php"></iframe>-->
