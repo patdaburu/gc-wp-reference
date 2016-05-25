@@ -18,7 +18,7 @@ include_once 'Plugin.php';
  * @link https://developer.wordpress.org/reference/functions/register_post_type/
  * @link http://lists.automattic.com/pipermail/wp-testers/2010-May/013010.html
  */
-class Post {
+class CustomPost {
 
 	/**
 	 * Does the post type have custom meta-data associated with it?
@@ -104,7 +104,8 @@ class Post {
 	 */
 	public static function get_post_type_key(){
 		// If a value for $post_type_key has been defined by the static variable, use it.  Otherwise, fabricate one.
-		$post_type_key = !is_null(Post::$post_type_key) ? Post::$post_type_key : Plugin::get_base_name('-').'-posts';
+		$post_type_key = !is_null(CustomPost::$post_type_key) ?
+			CustomPost::$post_type_key : Plugin::get_base_name('-') . '-posts';
 		// In any case, the post type key must not exceed 20 characters.
 		$post_type_key = substr($post_type_key, 0, 20);
 		// Return the value.
@@ -119,8 +120,8 @@ class Post {
 	 */
 	public static function get_meta_array_name(){
 		// If a value for $meta_form_array has been defined by the static variable, use it.  Otherwise, fabricate one.
-		$meta_array_name = !is_null(Post::$meta_array_name) ?
-			Post::$meta_array_name : Plugin::get_base_name('_') . '_post';
+		$meta_array_name = !is_null(CustomPost::$meta_array_name) ?
+			CustomPost::$meta_array_name : Plugin::get_base_name('_') . '_post';
 		// Return the value.
 		return $meta_array_name;
 	}
@@ -132,7 +133,8 @@ class Post {
 	 * @return string
 	 */
 	public static function get_meta_shortcode(){
-		$meta_shortcode = !is_null(Post::$meta_shortcode) ? Post::$meta_shortcode : Plugin::get_base_name('-').'-meta';
+		$meta_shortcode = !is_null(CustomPost::$meta_shortcode) ?
+			CustomPost::$meta_shortcode : Plugin::get_base_name('-') . '-meta';
 		return $meta_shortcode;
 	}
 
@@ -145,7 +147,7 @@ class Post {
 	 */
 	public static function get_post_meta_key(){
 		// Format the key used to identify the particular metadata set we want.
-		return '_'.preg_replace('/\W|\s/', '_',Post::get_post_type_key()).'_meta_data';
+		return '_'.preg_replace('/\W|\s/', '_',CustomPost::get_post_type_key()) . '_meta_data';
 	}
 
 	/**
@@ -175,7 +177,7 @@ class Post {
 			'menu_name'     => __($default_post_type_name_pl, $text_domain)
 		);
 		// Combine the labels provided at the top of the class with the defaults.
-		$labels = wp_parse_args(Post::$labels, $label_defaults);
+		$labels = wp_parse_args(CustomPost::$labels, $label_defaults);
 
 		// Set up default arguments to pass to register_post_type.
 		$default_args = array(
@@ -195,23 +197,23 @@ class Post {
 			'supports'           => array('title', 'editor','thumbnail','excerpt')
 		);
 		// Combine the arguments provided at the top of the class with the defaults.
-		$args = wp_parse_args(Post::$register_args, $default_args);
+		$args = wp_parse_args(CustomPost::$register_args, $default_args);
 
 		// There are a couple of ways the post type key may be defined.  The get_post_type_key() function can sort
 		// through them and tell us what the final value is.
-		$post_type_key = Post::get_post_type_key();
+		$post_type_key = CustomPost::get_post_type_key();
 		// Register the post type.
 		register_post_type($post_type_key, $args);
 
 		// If this type of post has metadata associated with it...
-		if(Post::HAS_METADATA)
+		if(CustomPost::HAS_METADATA)
 		{
 			// ...make sure the meta box for this type of post is loaded when a post is loaded.
-			add_action( 'add_meta_boxes_'.Post::get_post_type_key(), array( __CLASS__, 'on_add_meta_boxes' ));
+			add_action( 'add_meta_boxes_' . CustomPost::get_post_type_key(), array( __CLASS__, 'on_add_meta_boxes' ));
 			// Plus, we need to take some action when the post is saved.
 			add_action( 'save_post', array( __CLASS__, 'on_save_post' ));
 			// Add the shortcode.
-			add_shortcode(Post::get_meta_shortcode(), array( __CLASS__, 'shortcode' ));
+			add_shortcode(CustomPost::get_meta_shortcode(), array( __CLASS__, 'shortcode' ));
 		}
 
 	}
@@ -226,10 +228,10 @@ class Post {
 	public static function on_add_meta_boxes($post){
 		// Pretty simple, really.  Just make a call to add_meta_box().
 		add_meta_box(
-			Post::get_post_type_key().'-meta',
+			CustomPost::get_post_type_key() . '-meta',
 			__('Here is the meta data...', Plugin::get_text_domain()),
 			array( __CLASS__, 'meta_box' ), // the callback that defines the HTML of the meta box
-			Post::get_post_type_key(), // Show the meta-box with posts of this type.
+			CustomPost::get_post_type_key(), // Show the meta-box with posts of this type.
 			'side',
 			'default'
 			); // <-- Additional parameters to supply to the callback may optionally be supplied as the final argument.
@@ -247,7 +249,7 @@ class Post {
 	 */
 	private static function get_post_metadata($post){
 		// Get the key for this particular type of metadata.
-		$post_meta_key = Post::get_post_meta_key();
+		$post_meta_key = CustomPost::get_post_meta_key();
 		// Get the original meta-data for the post.
 		$_post_meta = get_post_meta($post->ID, $post_meta_key, true);
 		// Make a copy of the original meta-data in case we need to modify it.
@@ -265,19 +267,22 @@ class Post {
 	 */
 	public static function meta_box($post, $extras){
 		// Get the key for this particular type of metadata.
-		$post_meta_key = Post::get_post_meta_key();
+		$post_meta_key = CustomPost::get_post_meta_key();
 		// Get the original meta-data for the post.
 		$_post_meta = get_post_meta($post->ID, $post_meta_key, true); 
 		// Make a copy of the original meta-data in case we need to modify it.
 		/** @noinspection PhpUnusedLocalVariableInspection */
-		$post_metadata = (new \ArrayObject($_post_meta))->getArrayCopy(); // $post_metadata is used in the included file.
+		$post_metadata =
+			empty($_post_meta) ?
+				array() :
+				(new \ArrayObject($_post_meta))->getArrayCopy(); // $post_metadata is used in the included file.
 
 		/** @noinspection PhpUnusedLocalVariableInspection */
-		$input_array_name = Post::get_meta_array_name(); // $input_array_name is used in the included file.
+		$input_array_name = CustomPost::get_meta_array_name(); // $input_array_name is used in the included file.
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		$text_domain = Plugin::get_text_domain(); // $text_domain is used in the included file.
 		/** @noinspection PhpUnusedLocalVariableInspection */
-		$meta_shortcode = Post::get_meta_shortcode();
+		$meta_shortcode = CustomPost::get_meta_shortcode();
 
 		// We want a nonce field as a security measure.
 		$nonce_name = Plugin::get_base_name();
@@ -295,7 +300,8 @@ class Post {
 	public static function on_save_post($post_id){
 		// If the post type doesn't match the post type described by this class, or the HTML POST doesn't contain
 		// the meta data array...
-		if(get_post_type($post_id) != Post::get_post_type_key() || !isset($_POST[Post::get_meta_array_name()])){
+		if( get_post_type($post_id) != CustomPost::get_post_type_key() ||
+		    !isset($_POST[CustomPost::get_meta_array_name()])){
 			// ...there's nothing to do here.
 			return;
 		}
@@ -306,13 +312,13 @@ class Post {
 		$nonce_name = Plugin::get_base_name();
 		wp_verify_nonce('meta-box-save', $nonce_name);
 		// Store the post data in a variable.
-		$incoming_meta_data = $_POST[Post::get_meta_array_name()];
+		$incoming_meta_data = $_POST[CustomPost::get_meta_array_name()];
 
 		// Use the array_map function to sanitize the option values.
 		$incoming_meta_data = array_map('sanitize_text_field', $incoming_meta_data);
 
 		// Get the key for this particular type of metadata.
-		$post_meta_key = Post::get_post_meta_key();
+		$post_meta_key = CustomPost::get_post_meta_key();
 		// Save the meta box data as post metadata.
 		update_post_meta($post_id, $post_meta_key, $incoming_meta_data);
 	}
@@ -336,7 +342,7 @@ class Post {
 		extract(shortcode_atts(array("show"=>''), $atts));
 
 		// Load the metadata for the custom post.
-		$post_metadata = Post::get_post_metadata($post);
+		$post_metadata = CustomPost::get_post_metadata($post);
 		/** @noinspection PhpUndefinedVariableInspection */
 		return $post_metadata[$show]; // $show is added to the symbols table when we called extract() above.
 	}

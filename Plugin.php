@@ -21,8 +21,10 @@ include_once 'Tables.php'; // TODO: Include only if required?
  * The plugin class delegates responsibilities for settings (options) to the Options class.
  */
 include_once 'Options.php';
-
-include_once 'Post.php';
+/**
+ * In case the plugin has custom posts.
+ */
+include_once 'CustomPost.php';
 
 /**
  * Entry point for the plugin.
@@ -374,7 +376,7 @@ class Plugin {
 	 * @see register_uninstall_hook()
 	 */
 	static function on_init_custom_post_types(){
-		Post::on_init();
+		CustomPost::on_init();
 	}
 
 	/**
