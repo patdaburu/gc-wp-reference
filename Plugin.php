@@ -22,6 +22,8 @@ include_once 'Tables.php'; // TODO: Include only if required?
  */
 include_once 'Options.php';
 
+include_once 'Post.php';
+
 /**
  * Entry point for the plugin.
  *
@@ -51,6 +53,15 @@ class Plugin {
 	 */
 	const USES_CUSTOM_TABLES = true;
 
+	/**
+	 * Does the plugin have custom post types?
+	 *
+	 * If the plugin has custom post types, the Plugin class will execute functions to set them up.
+	 *
+	 * @see Plugin::startup()
+	 * @see Post
+	 * @since 1.0.0
+	 */
 	const HAS_CUSTOM_POST_TYPES = true;
 
 	/**
@@ -136,10 +147,11 @@ class Plugin {
 		register_uninstall_hook( __FILE__, array( __CLASS__, 'on_uninstall' ) );
 		*/
 
-		/**
-		 * Below are common functions that may, or may not be interesting for the purposes of this plugin.
-		 */
-		//add_action('add_meta_boxes', array( __CLASS__, 'on_add_meta_boxes' ));
+		// If the plugin defines custom post types...
+		if(Plugin::HAS_CUSTOM_POST_TYPES){
+			// ...we need to set that up at init.
+			add_action( 'init', array( __CLASS__, 'on_init_custom_post_types' ) );
+		}
 	}
 
 	/**
@@ -160,12 +172,6 @@ class Plugin {
 			// The text domain is the plugin's "base name" with dashes substituted in for word boundaries.
 			Plugin::get_text_domain(),
 			false, plugin_basename( dirname( __FILE__ ) . '/localization' ) );
-		// If the plugin defines custom post types...
-		if(Plugin::HAS_CUSTOM_POST_TYPES){
-			// ...initialize the custom post types.
-			include_once 'Post.php';
-			Post::on_init();
-		}
 	}
 
 	/**
@@ -356,6 +362,19 @@ class Plugin {
 		// We make the asumption that the widget class is in the same namespace as the plugin class.  If this isn't
 		// the case, adjust the argument.
 		register_widget(__NAMESPACE__.'\Widget');
+	}
+
+	/**
+	 * Initializes custom post types.
+	 *
+	 * Callback for the 'init' action when the plugin features custom post types.
+	 *
+	 * @ignore
+	 * @since 1.0.0
+	 * @see register_uninstall_hook()
+	 */
+	static function on_init_custom_post_types(){
+		Post::on_init();
 	}
 
 	/**
